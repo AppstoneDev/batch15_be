@@ -11,3 +11,8 @@ app.get("/", (req, res)=>{
 app.listen(app.get("port"), () => {
   console.log("Express app is running on port " + app.get("port"));
 })
+
+//ASSIGNMENT 1
+//CREATE A LOGIN VALIDATION API IN GET METHOD
+//SEND USERNAME AND PASSWORD
+//VALIDATE IT USING IF ELSE STATEMENT AND SEND A RESPONSE ACCORDINGLY. 
