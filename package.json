@@ -4,6 +4,7 @@
   "description": "This is a backend project created for the purpose of learning",
   "main": "index.js",
   "scripts": {
+    "start": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -15,6 +16,7 @@
   "author": "Nextstacks",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.18.1"
+    "express": "^4.18.1",
+    "nodemon": "^2.0.16"
   }
 }
