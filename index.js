@@ -30,6 +30,10 @@ app.post("/addDetail", (req, res) => {
 //USE A API TO SIGNUP AND VALIATE AND SECOND API TO LOGIN RETURN THE USER DETAILS
 
 
+//ASSIGNMENT3
+//CREATE QUERIES FOR GET AND PUT AND DELETE METHOD and update the data to the local arraylist
+
+
 
 
 
