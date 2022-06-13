@@ -34,8 +34,9 @@ app.post("/addDetail", (req, res) => {
 
 
 const users = [];
+var id = 0;
 
-app.post("/signup", (req, res) => {
+app.post("/users", (req, res) => {
   var username = req.body.username
   var password = req.body.password
   var email = req.body.email
@@ -53,13 +54,57 @@ app.post("/signup", (req, res) => {
   }
 
     var newUser = {
+      "id" : id,
       "username" : username,
       "password" : password,
       "email" :email,
       "name": name
     }
-
+    id++;
     users.push(newUser);
     res.json({status:true, message:"User added successfully"});
   
+})
+
+app.get("/users", (req, res)=> {
+
+  var nameQuery = req.query.name;
+  if(nameQuery != null && nameQuery != undefined && nameQuery != ""){
+    for (var user of users){
+      if(user.name.toLowerCase() == nameQuery.toLowerCase()){
+        res.json({status:true, message: "user found", result : user});
+        return;
+      }
+    }
+  }
+
+  res.json({status:true, message:"Users found", result : users});
+})
+
+
+app.put("/users", (req, res)=>{
+  var idToBeChanged = parseInt(req.body.id);
+  var newEmail = req.body.email;
+  var newName = req.body.name;
+  var newUserName = req.body.username
+  var newPassword = req.body.password
+  for (var user of users){
+    if(user.id == idToBeChanged){
+      var newUser = {
+        id : user.id,
+        name : newName,
+        email : newEmail,
+        username : newUserName,
+        password : newPassword,
+      }
+
+      users.pop(user);
+      users.push(newUser);
+      res.json({status:true, message:"user data updated"});
+      return;
+    }
+  }
+
+  res.json({status:false, message:"no user found for this id"});
+
 })
