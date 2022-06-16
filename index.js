@@ -1,18 +1,27 @@
 var express = require("express");
 var app = express();
 
+var db = require("./db");
+
 app.set("port", 8000);
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json());
+
+
+db.connect(() => {
+  app.listen(app.get("port"), () => {
+    console.log("Express app is running on port " + app.get("port"));
+  })
+})
+
+
 
 app.get("/", (req, res) => {
   console.log(req.query.username);
   res.send("hello from default path");
 })
 
-app.listen(app.get("port"), () => {
-  console.log("Express app is running on port " + app.get("port"));
-})
+
 
 app.post("/addDetail", (req, res) => {
   console.log(req.body);
@@ -34,6 +43,8 @@ app.post("/addDetail", (req, res) => {
 //CREATE QUERIES FOR GET AND PUT AND DELETE METHOD and update the data to the local arraylist
 
 
+//ASSIGNMENT4
+//CREATE MONGODB  AND CONNECT IT USING MONGODB COMPASS. CREATE A DB CLASS TO CONNECT YOUR APP TO MONGODB.
 
 
 
@@ -45,70 +56,78 @@ app.post("/users", (req, res) => {
   var password = req.body.password
   var email = req.body.email
   var name = req.body.name
-  
+
   console.log("api called");
 
-  if(users.length > 0){
-    for (var user of users){
-      if(user.username == username){
-        res.json({status:false, message:"username exists" });
+  if (users.length > 0) {
+    for (var user of users) {
+      if (user.username == username) {
+        res.json({ status: false, message: "username exists" });
         return;
       }
     }
   }
 
-    var newUser = {
-      "id" : id,
-      "username" : username,
-      "password" : password,
-      "email" :email,
-      "name": name
+  var newUser = {
+    "username": username,
+    "password": password,
+    "email": email,
+    "name": name
+  }
+  id++;
+  users.push(newUser);
+ 
+
+  db.collection("users").insertOne(newUser, (err, doc)=>{
+    if(err){
+      console.log(err);
+      res.json({status:false, message:"Error occured while inserting data"});
+    }else{
+      res.json({ status: true, message: "User added successfully" });
     }
-    id++;
-    users.push(newUser);
-    res.json({status:true, message:"User added successfully"});
-  
+  })
+
 })
 
-app.get("/users", (req, res)=> {
+app.get("/users", (req, res) => {
 
   var nameQuery = req.query.name;
-  if(nameQuery != null && nameQuery != undefined && nameQuery != ""){
-    for (var user of users){
-      if(user.name.toLowerCase() == nameQuery.toLowerCase()){
-        res.json({status:true, message: "user found", result : user});
+  if (nameQuery != null && nameQuery != undefined && nameQuery != "") {
+    for (var user of users) {
+      if (user.name.toLowerCase() == nameQuery.toLowerCase()) {
+        res.json({ status: true, message: "user found", result: user });
         return;
       }
     }
   }
 
-  res.json({status:true, message:"Users found", result : users});
+  res.json({ status: true, message: "Users found", result: users });
 })
 
 
-app.put("/users", (req, res)=>{
+app.put("/users", (req, res) => {
   var idToBeChanged = parseInt(req.body.id);
   var newEmail = req.body.email;
   var newName = req.body.name;
   var newUserName = req.body.username
   var newPassword = req.body.password
-  for (var user of users){
-    if(user.id == idToBeChanged){
+  for (var user of users) {
+    if (user.id == idToBeChanged) {
       var newUser = {
-        id : user.id,
-        name : newName,
-        email : newEmail,
-        username : newUserName,
-        password : newPassword,
+        id: user.id,
+        name: newName,
+        email: newEmail,
+        username: newUserName,
+        password: newPassword,
       }
 
       users.pop(user);
       users.push(newUser);
-      res.json({status:true, message:"user data updated"});
+      res.json({ status: true, message: "user data updated" });
       return;
     }
   }
 
-  res.json({status:false, message:"no user found for this id"});
+  res.json({ status: false, message: "no user found for this id" });
 
 })
