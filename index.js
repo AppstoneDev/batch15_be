@@ -1,18 +1,24 @@
 var express = require("express");
 var app = express();
-
+let cors = require("cors");
 var db = require("./db");
 
-app.set("port", 8000);
-app.use(express.urlencoded({ extended: false }))
-app.use(express.json());
-
+var routes = require("../batch15_be/routes/index")
 
 db.connect(() => {
   app.listen(app.get("port"), () => {
     console.log("Express app is running on port " + app.get("port"));
   })
 })
+
+app.set("port", 8000);
+app.use(express.urlencoded({ extended: false }))
+app.use(express.json());
+app.use(cors());
+app.use("/api", routes);
+
+
+
 
 
 
