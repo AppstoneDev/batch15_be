@@ -1,7 +1,8 @@
 
 
 const db = {
-  PRODUCTCATEGORY : "product_category"
+  PRODUCTCATEGORY : "product_category",
+  PRODUCT : "products",
 }
 
 
